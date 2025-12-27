@@ -2,66 +2,47 @@ package Talabat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Resturant {
     private String name;
     private String phone;
-    private double rating=0;
+    private double rating;
     private String address;
     private HashMap<Category, ArrayList<Dish>> menu;
 
-    public Resturant(){
-        this.name = "";
-        this.phone = "";
-        this.address = "";
-        this.menu = new HashMap<>();
-        for (Category category : Category.values()){
-            this.menu.put(category,new ArrayList<>());
+    public Resturant(String name, String phone, double rating, String address, HashMap<Category, ArrayList<Dish>> menu) throws IllegalArgumentException {
+        try {
+            setName(name);
+            setPhone(phone);
+            setRating(rating);
+            setAddress(address);
+            setMenu(menu);
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+            throw exception;
         }
     }
-    public Resturant(String name, String phone, double rating, String address, Dish[] dishes) {
-        this.name = name;
-        this.phone = phone;
-        this.rating = rating;
-        this.address = address;
-        this.menu = new HashMap<>();
-        for (Category category : Category.values()) {
-            this.menu.put(category, new ArrayList<>());
-        }
-        for (Dish d : dishes) {
-            menu.get(d.getCategory()).add(d);
-        }
+
+    public Resturant() {
+        this("", "", 0, "", new HashMap<>());
     }
+
     public Resturant(Resturant other) {
-        this.name = other.name;
-        this.phone = other.phone;
-        this.rating = other.rating;
-        this.address = other.address;
-        this.menu = new HashMap<>();
-        for (Category c : Category.values()) {
-            ArrayList<Dish> copyList = new ArrayList<>();
-            for (Dish d : other.menu.get(c)) {
-                copyList.add(new Dish(d));
-            }
-            this.menu.put(c, copyList);
-        }
-    }
-    public void showMenu(){
-        for (Category c : menu.keySet()) {
-            System.out.println("Category: " + c);
-            for (Dish d : menu.get(c)) {
-                System.out.println("- " + d.getName() + " : " + d.getPrice());
-            }
-        }
+        this(other.name, other.phone, other.rating, other.address, other.menu);
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public String showMenu() {
+        String menuList = "";
+        for (Category category : menu.keySet()) {
+            if (menu.get(category).size() > 0) {
+                menuList += "Category: " + category + "\n\n";
+                for (Dish dish : menu.get(category)) {
+                    menuList += "\t- " + dish.getName() + " : " + dish.getPrice() + "\n";
+                }
+                menuList += "\n";
+            }
+        }
+        return menuList;
     }
 
     public String getName() {
@@ -69,7 +50,19 @@ public class Resturant {
     }
 
     public void setName(String name) {
+        if (name == null)
+            throw new IllegalArgumentException("Invalid name");
         this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        if (phone == null)
+            throw new IllegalArgumentException("Invalid phone");
+        this.phone = phone;
     }
 
     public double getRating() {
@@ -77,6 +70,8 @@ public class Resturant {
     }
 
     public void setRating(double rating) {
+        if (rating < 0 || rating > 5)
+            throw new IllegalArgumentException("Invalid rating");
         this.rating = rating;
     }
 
@@ -85,6 +80,8 @@ public class Resturant {
     }
 
     public void setAddress(String address) {
+        if (address == null)
+            throw new IllegalArgumentException("Invalid address");
         this.address = address;
     }
 
@@ -93,6 +90,16 @@ public class Resturant {
     }
 
     public void setMenu(HashMap<Category, ArrayList<Dish>> menu) {
-        this.menu = menu;
+        if (menu == null)
+            throw new IllegalArgumentException("Menu cannot be null");
+        this.menu = new HashMap<>();
+        for (Category category : Category.values()) {
+            this.menu.put(category, new ArrayList<>());
+        }
+        for (Category category : menu.keySet()) {
+            for (Dish dish : menu.get(category)) {
+                this.menu.get(category).add(new Dish(dish));
+            }
+        }
     }
 }

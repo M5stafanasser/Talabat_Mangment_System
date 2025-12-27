@@ -7,28 +7,27 @@ public class Dish {
     private String discription;
     private Category category;
     private double price;
-    private int timesOrdered = 0 ;
-    private boolean visable = false ;
+    private int timesOrdered = 0;
+    private boolean visable = false;
 
-    public Dish(){
-    this.name = "";
-    this.discription = "";
-    this.category =APPETIZER;
-        this.price = 0;
+    public Dish(String name, String discription, Category category, double price) throws IllegalArgumentException {
+        try {
+            setName(name);
+            setDiscription(discription);
+            setCategory(category);
+            setPrice(price);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
-    public Dish(String name, String discription, Category category, double price) {
-        this.name = name;
-        this.discription = discription;
-        this.category = category;
-        this.price = price;
+    public Dish()  {
+        this("", "", APPETIZER, 0);
     }
 
-    public Dish(Dish dish){
-        this.name = dish.name;
-        this.discription = dish.discription;
-        this.category = dish.category;
-        this.price = dish.price;
+    public Dish(Dish dish)  {
+        this(dish.name, dish.discription, dish.category, dish.price);
         this.timesOrdered = dish.timesOrdered;
         this.visable = dish.visable;
     }
@@ -38,6 +37,8 @@ public class Dish {
     }
 
     public void setName(String name) {
+        if (name == null)
+            throw new IllegalArgumentException("Invalid name");
         this.name = name;
     }
 
@@ -46,6 +47,8 @@ public class Dish {
     }
 
     public void setDiscription(String discription) {
+       if (discription == null)
+           throw new IllegalArgumentException("Invalid discription");
         this.discription = discription;
     }
 
@@ -54,6 +57,8 @@ public class Dish {
     }
 
     public void setCategory(Category category) {
+        if (category == null)
+            throw new IllegalArgumentException("Invalid category");
         this.category = category;
     }
 
@@ -62,6 +67,8 @@ public class Dish {
     }
 
     public void setPrice(double price) {
+        if (price < 0)
+            throw new IllegalArgumentException("Price cannot be negative");
         this.price = price;
     }
 
@@ -70,6 +77,8 @@ public class Dish {
     }
 
     public void setTimesOrdered(int timesOrdered) {
+        if (timesOrdered < 0)
+            throw new IllegalArgumentException("TimesOrdered cannot be negative");
         this.timesOrdered = timesOrdered;
     }
 
