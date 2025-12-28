@@ -3,14 +3,21 @@ package Talabat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Resturant {
     private String name;
     private String phone;
     private double rating;
     private String address;
-    private HashMap<Category, ArrayList<Dish>> menu;
-    public Resturant(String name, String phone, double rating, String address, HashMap<Category, ArrayList<Dish>> menu) throws IllegalArgumentException {
+    private  ArrayList<Dish> menu;
+    @Override
+    public boolean equals(Object obj) {
+        Resturant resturant = (Resturant) obj;
+        return this.name.equals(resturant.getName());
+    }
+
+    public Resturant(String name, String phone, double rating, String address, ArrayList<Dish> menu) throws IllegalArgumentException {
         try {
             setName(name);
             setPhone(phone);
@@ -23,7 +30,7 @@ public class Resturant {
         }
     }
     public Resturant() {
-        this("", "", 0, "", new HashMap<>());
+        this("", "", 0, "", new ArrayList<Dish>());
     }
 
     public Resturant(Resturant other) {
@@ -31,17 +38,20 @@ public class Resturant {
     }
 
     public String showMenu() {
-        String menuList = "";
-        for (Category category : menu.keySet()) {
-            if (menu.get(category).size() > 0) {
-                menuList += "Category: " + category + "\n\n";
-                for (Dish dish : menu.get(category)) {
-                    menuList += "\t- " + dish.getName() + " : " + dish.getPrice() + "\n";
-                }
-                menuList += "\n";
-            }
-        }
-        return menuList;
+        StringBuilder menulist = new StringBuilder();
+        ArrayList<Dish> menu = getMenu();
+        menu.stream()
+               .collect(Collectors.groupingBy(Dish::getCategory))
+               .forEach((category, dishes) -> {
+                   menulist.append( "===" ).append(category).append(" ====\n");
+                    dishes.stream()
+                            .forEach(dish ->
+                                    menulist.append("\t-").append(dish.getName()).append(" ").append(dish.getPrice()).append(" \n"));
+
+
+               });
+
+        return menulist.toString();
     }
 
     public String getName() {
@@ -84,55 +94,36 @@ public class Resturant {
         this.address = address;
     }
 
-    public HashMap<Category, ArrayList<Dish>> getMenu() {
+    public ArrayList<Dish> getMenu() {
         return menu;
     }
 
-    public void setMenu(HashMap<Category, ArrayList<Dish>> menu) {
+    public void setMenu(ArrayList<Dish> menu) {
         if (menu == null)
             throw new IllegalArgumentException("Menu cannot be null");
-        this.menu = new HashMap<>();
-        for (Category category : Category.values()) {
-            this.menu.put(category, new ArrayList<>());
-        }
-        for (Category category : menu.keySet()) {
-            for (Dish dish : menu.get(category)) {
-                this.menu.get(category).add(new Dish(dish));
-            }
-        }
+        this.menu = menu;
     }
 
-    public void addDish(Dish dish, Category category) {
+    public void addDish(Dish dish) {
         if (dish == null)
             throw new IllegalArgumentException("Dish cannot be null");
-
-        if (!menu.containsKey(category))
-            throw new IllegalArgumentException("Invalid category");
-
-        menu.get(category).add(dish);
+        //new menu
+            getMenu().add(dish);
     }
-    public void removeDish(Dish dish, Category category) {
-        if(!(menu.containsKey(category) && dish!=null)) {
+    public void removeDish(Dish dish) {
+        if(dish==null) {
             throw new IllegalArgumentException("Dish not found");
         }
-        menu.get(category).remove(dish);
+        getMenu().remove(dish);
     }
 
     public void updateDish(Dish oldDish, Dish newDish) {
         if (oldDish == null || newDish == null)
             throw new IllegalArgumentException("Dishes cannot be null");
-
-        Category category = oldDish.getCategory();
-
-        if (!menu.containsKey(category))
-            throw new IllegalArgumentException("Category not found");
-
-        ArrayList<Dish> dishes = menu.get(category);
+        ArrayList<Dish> dishes = getMenu();
         int index = dishes.indexOf(oldDish);
         if (index  < 0 )
             throw new IllegalArgumentException("Dish not found");
-
         dishes.set(index, newDish);
-
     }
 }

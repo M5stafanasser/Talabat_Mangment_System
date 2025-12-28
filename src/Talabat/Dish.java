@@ -10,6 +10,14 @@ public class Dish {
     private int timesOrdered = 0;
     private boolean visable = false;
 
+
+    @Override
+    public boolean equals(Object obj) {
+        Dish dish = (Dish) obj;
+        return this.name.equals(dish.getName());
+    }
+
+
     public Dish(String name, String discription, Category category, double price) throws IllegalArgumentException {
         try {
             setName(name);
