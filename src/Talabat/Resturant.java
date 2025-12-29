@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+
 public class Resturant {
     private String name;
     private String phone;
@@ -60,9 +61,17 @@ public class Resturant {
     }
 
     public void setName(String name) {
+
         if (name == null)
             throw new IllegalArgumentException("Invalid name");
-        this.name = name;
+
+    ArrayList<Resturant> resturants = ResturantRepo.getResturantlist();
+    for(Resturant resturant : resturants) {
+        if(name.equals(resturant.getName())) {
+            throw  new IllegalArgumentException("Invalid name");
+        }
+    }
+                this.name = name;
     }
 
     public String getPhone() {
@@ -118,6 +127,9 @@ public class Resturant {
         }
         getMenu().remove(dish);
         dishCounter--;
+    }
+    public void addRating(double rating) {
+        setRating(rating);
     }
 
     public void updateDish(Dish oldDish, Dish newDish) {
