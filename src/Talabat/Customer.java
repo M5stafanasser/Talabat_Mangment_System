@@ -84,10 +84,33 @@ public class Customer extends User {
      */
 
      private Resturant showResLis() {
+         Resturant restaurantPicked;
          //show all Restaurants for the Customer
-         Resturant restaurantPicked =new Resturant();
-         int choice = Integer.parseInt(presenter.read());
-         presenter.print("Choose the Restaurant");
+         presenter.print("Restaurants");
+         for(int i=0;i<ResturantRepo.getResturantlist().size();i++){
+             presenter.print('\t'+ i+1+": "+ResturantRepo.getResturantlist().get(i).getName());
+         }
+         presenter.print("Choose the number of the Restaurant you want (enter X to cancle) : ");
+         while(true) {
+             String choice = presenter.read();
+             if (choice.toLowerCase().charAt(0) == 'x') {
+                 return null;
+             }
+             else if (Integer.valueOf(choice)>0 &&Integer.valueOf(choice)<= ResturantRepo.getResturantlist().size()+1){
+                  restaurantPicked =ResturantRepo.getResturantlist().get(Integer.valueOf(choice));
+                 break;
+             }
+             else {
+                 presenter.print("Invalid Choice plz Enter a valid Choice");
+                 continue;
+             }
+
+
+         }
+
+
+
+        placeOrder(restaurantPicked);
 
         return restaurantPicked;
      }
@@ -104,10 +127,17 @@ public class Customer extends User {
          // ord.setResturant = res;
          // ord.setDeliveryTime = ....;
 
+            presenter.print(res.showMenu());
         while(true){
             presenter.print("Enter Dish no. (enter X to cancle) : ");
-            //here you will loop for the static array of the dishes in the restaurant
-            //and then you will the dish and add it in orderitem var that is called ordItem
+            String dishChoice = presenter.read();
+            if(dishChoice.toLowerCase().charAt(0) == 'x' ){
+                return null;
+            }
+            //else if()
+
+
+            // you will the dish and add it in orderitem var that is called ordItem
             //and then you will add the ordItem in the arraylist of the dishes in the order
 
             presenter.print("Enter the amount ");
@@ -118,6 +148,7 @@ public class Customer extends User {
             answer = presenter.read().charAt(0);
 
                 if(toLowerCase(answer) == 'n') {
+                    //here remeber that you will the constructur all the data you want
                     ord = new Order();
                     break;
                 }
@@ -128,6 +159,8 @@ public class Customer extends User {
 
 
         }
+        this.orders.add(ord);
+        // ord.showOrder();
 
         return ord;
      }
@@ -138,13 +171,13 @@ public class Customer extends User {
     */
      public void newOrder(){
 
-        Resturant restaurantPicked = showResLis();
+        while(true){
+            if(this.showResLis() == null){
+                return;
+            }
 
-         // here print the data about all the menu u have
-         //System.out.println();
-        Order order=placeOrder(restaurantPicked);
-         this.orders.add(order);
-         // order.showOrder();
+        }
+
 
 
 
