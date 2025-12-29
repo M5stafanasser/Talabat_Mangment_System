@@ -5,272 +5,247 @@ import java.util.Scanner;
 
 public class Admin extends User {
 
+    private Scanner scanner = new Scanner(System.in);
+
+    public void adminMenu() {
+        int choice;
+
+        do {
+            System.out.println("\n====== ADMIN MENU ======");
+            System.out.println("1. View Customers");
+            System.out.println("2. View Restaurants");
+            System.out.println("3. Add Restaurant");
+            System.out.println("4. Edit Restaurant");
+            System.out.println("5. Edit Customer");
+            System.out.println("6. Remove Customer");
+            System.out.println("0. Logout");
+
+            choice = scanner.nextInt();
 
 
+            switch (choice) {
+                case 1:
+                    viewCustomerList(CustomerRepo.getCustomerList());
+                    break;
 
-    public void viewCustomerList(ArrayList<Customer> cusomerlist){
-        for (Customer c:cusomerlist){
+                case 2:
+                    viewResList(ResturantRepo.getResturantlist());
+                    break;
+
+                case 3:
+                    addRes();
+                    break;
+
+                case 4:
+                    System.out.println("Enter restaurant name");
+                    editResDetail(scanner.nextLine());
+                    break;
+
+                case 5:
+                    System.out.println("Enter customer name");
+                    editCustomerDetail(scanner.nextLine());
+                    break;
+
+                case 6:
+                    System.out.println("Enter customer name");
+                    removeCustomer(scanner.nextLine());
+                    break;
+
+                case 0:
+                    logout();
+                    break;
+            }
+
+        } while (choice != 0);
+    }
+
+    public void viewCustomerList(ArrayList<Customer> list) {
+        for (Customer c : list)
             System.out.println(c);
-        }
-    };
+    }
 
-    public void  viewResList(ArrayList<Resturant> resturantlist){
-        for (Resturant r:resturantlist){
-            System.out.println(r);
-        }
-    };
+    public void viewResList(ArrayList<Resturant> list) {
+        for (Resturant r : list)
+            System.out.println(r.getName());
+    }
 
-    public void addRes(){
-        System.out.println("Enter resturante name");
-        Scanner input1=new Scanner(System.in);
-        String name=input1.nextLine();
+    public void addRes() {
+        System.out.println("Restaurant name");
+        String name = scanner.nextLine();
 
-        System.out.println("Enter resturante phone");
-        String phone=input1.nextLine();
+        System.out.println("Phone");
+        String phone = scanner.nextLine();
 
-        System.out.println("Enter resturante address");
-        String address=input1.nextLine();
+        System.out.println("Address");
+        String address = scanner.nextLine();
 
-        System.out.println("Enter resturante rate");
-        double rate=input1.nextDouble();
+        System.out.println("Rating");
+        double rating = scanner.nextDouble();
 
 
-        ArrayList<Dish> menu=new ArrayList<>();
+        ArrayList<Dish> menu = new ArrayList<>();
 
-        while (true){
-            Dish d2 =new Dish();
+        while (true) {
+            Dish d = new Dish();
 
-            System.out.println("Enter dish name");
-            String dishname=input1.next();
-            d2.setName(dishname);
+            System.out.println("Dish name");
+            d.setName(scanner.nextLine());
 
-            System.out.println("Enter dish category" +
-                    "Enter A for APPETIZER" +
-                    "Enter M for maincourse" +
-                    "Enter D for desert" +
-                    "Enter B for Beverages ");
-            String category=input1.next().toLowerCase();
+            System.out.println("Category (A Appetizer /M Main_Course /D Desert /B brevelge)");
+            char c = scanner.nextLine().toUpperCase().charAt(0);
 
-            if (category.equals("a")){
-                d2.setCategory(Category.APPETIZER);
-            }
-            if (category.equals("a")){
-                d2.setCategory(Category.MAIN_COURSE);
-            }
-            if (category.equals("D")){
-                d2.setCategory(Category.DESSERT);
-            }
-            if (category.equals("B")){
-                d2.setCategory(Category.DRINK);
-            }
-            System.out.println("Enter price ");
-            double price= input1.nextDouble();
-            d2.setPrice(price);
+            if (c == 'A') d.setCategory(Category.APPETIZER);
+            if (c == 'M') d.setCategory(Category.MAIN_COURSE);
+            if (c == 'D') d.setCategory(Category.DESSERT);
+            if (c == 'B') d.setCategory(Category.DRINK);
 
+            System.out.println("Price");
+            d.setPrice(scanner.nextDouble());
 
-            menu.add(d2);
-            System.out.println("Do you want to add anthor dish");
-            String choise=input1.next().toLowerCase();
-            if (choise=="n"){
+            menu.add(d);
+
+            System.out.println("Add another dish? (y/n)");
+            if (scanner.nextLine().equalsIgnoreCase("n"))
                 break;
+        }
+
+        ResturantRepo.getResturantlist()
+                .add(new Resturant(name, phone, rating, address, menu));
+    }
+
+    public void editResDetail(String name) {
+        Resturant resturant = new Resturant();
+        for (Resturant r : ResturantRepo.getResturantlist()){
+            if (r.getName().equals(name)) {
+                resturant = r;
             }
         }
 
-       // Resturant es=new Resturant(name,phone,rate,address,);*************
+        int choice;
+
+        do {
+            System.out.println("\n--- Edit Restaurant ---");
+            System.out.println("1. Edit Info");
+            System.out.println("2. Add Dish");
+            System.out.println("3. Remove Dish");
+            System.out.println("4. Update Dish");
+            System.out.println("0. Back");
+
+            choice = scanner.nextInt();
 
 
-       //Add resturant add es
+            if (choice == 1) {
+                System.out.println("New name");
+                resturant.setName(scanner.nextLine());
 
+                System.out.println("New address");
+                resturant.setAddress(scanner.nextLine());
 
+                System.out.println("New phone");
+                resturant.setPhone(scanner.nextLine());
 
-    };/********** menu **********/
+                System.out.println("New rating");
+                resturant.setRating(scanner.nextDouble());
 
-    public void editResDetail(String Resturantname){
-
-         int index =ResturantRepo.getResturantlist().indexOf(Resturantname);
-
-
-        if(index!=1){
-            System.out.println("Do you want to remove the resturant account");
-            Scanner choise=new Scanner(System.in);
-            char c=choise.next().toLowerCase().charAt(0);
-            if (c=='y'){
-                ResturantRepo.getResturantlist().remove(index);
             }
-            else {
-                System.out.println("resturant name: " + ResturantRepo.getResturantlist().get(index).getName() +
-                        "resturant address" + ResturantRepo.getResturantlist().get(index).getAddress() +
-                        "resturant menu" + ResturantRepo.getResturantlist().get(index).getMenu() +
-                        "resturant rate " + ResturantRepo.getResturantlist().get(index).getRating() +
-                        "resturant phone " + ResturantRepo.getResturantlist().get(index).getPhone());
 
-                System.out.println("Type the resturant's name");//Show data!!!!!!!!!!!!!
-                Scanner input2=new Scanner(System.in);
-                String resturants_name =input2.nextLine();
+            if (choice == 2) {
+                Dish d = new Dish();
 
-                System.out.println("Type the resturant's address");
-                String resturants_address =input2.nextLine();
+                System.out.println("Dish name");
+                d.setName(scanner.nextLine());
 
+                System.out.println("Category (A Appetizer /M Main_Course /D Desert /B brevelge)");
+                char c = scanner.nextLine().toUpperCase().charAt(0);
 
+                if (c == 'A') d.setCategory(Category.APPETIZER);
+                if (c == 'M') d.setCategory(Category.MAIN_COURSE);
+                if (c == 'D') d.setCategory(Category.DESSERT);
+                if (c == 'B') d.setCategory(Category.DRINK);
 
-
-                /*menu!!!! show menu    any dish you want to change */
-
-                System.out.println(ResturantRepo.getResturantlist().get(index).showMenu());
-                System.out.println("Any dish you want to change");
-                String chois2=input2.nextLine();
+                System.out.println("Price");
+                d.setPrice(scanner.nextDouble());
 
 
-                System.out.println("Do you want to add or delete or edite");
-                String chois3=input2.nextLine();
+                resturant.addDish(d);
+            }
 
-                if (chois3=="add"){
+            if (choice == 3) {
+                System.out.println("Dish name");
+               for (Dish dish : resturant.getMenu()){
+                   if (dish.getName().equals(scanner.nextLine())) {
+                       resturant.removeDish(dish);
+                   }
+               }
+            }
 
-                    System.out.println("Enter dish name");
-                    String dish_name=input2.nextLine();
+            if (choice == 4) {
+                System.out.println("Old dish name:");
 
-                    System.out.println("Enter dish category");
-                    Category dish_category= Category.valueOf(input2.nextLine());
+                String oldName = scanner.nextLine();
 
-                    System.out.println("Enter dish price");
-                    double dish_price=input2.nextDouble();
-
-                    System.out.println("Enter dish discription");
-                    String dish_discription=input2.nextLine();
-
-                    Dish d1=new Dish(dish_name,dish_discription,dish_category,dish_price);
-
-                    ResturantRepo.getResturantlist().get(index).addDish(d1);
-
-
+                Dish oldDish = new Dish();
+                for (Dish oldDishD : resturant.getMenu()){
+                    if (oldDishD.getName().equals(oldName)) {
+                        oldDish = oldDishD;
+                    }
                 }
 
-                if (chois3=="delete"){
+                System.out.println("New dish name:");
+                String newName = scanner.nextLine();
 
-                    System.out.println("Enter dish name");
-                    String dish_name=input2.nextLine();
-
-                   ResturantRepo.getResturantlist().get(index).removeDish(new Dish(dish_name,"",null,0));
-
-
-                }
-
-                if (chois3=="edite"){
-
-                    System.out.println("Enter dish name");
-                    String dish_name=input2.nextLine();
-
-                    System.out.println("Enter dish category");
-                    Category dish_category= Category.valueOf(input2.nextLine());
-
-                    System.out.println("Enter dish price");
-                    double dish_price=input2.nextDouble();
-
-                    System.out.println("Enter dish discription");
-                    String dish_discription=input2.nextLine();
+                System.out.println("New description:");
+                String newDesc = scanner.nextLine();
 
 
-                    ArrayList<Dish> d=new ArrayList<>();
-                    d.add(dish_name,dish_category,dish_price,dish_discription);
-                    ResturantRepo.getResturantlist().set(get(index),d);
+                Category newCategory = Category.APPETIZER;
+                System.out.println("Category (A Appetizer /M Main_Course /D Desert /B brevelge)");
+                char c = scanner.nextLine().toUpperCase().charAt(0);
+                if (c == 'A') newCategory = Category.APPETIZER;
+                if (c == 'M') newCategory = Category.MAIN_COURSE;
+                if (c == 'D') newCategory = Category.DESSERT;
+                if (c == 'B') newCategory = Category.DRINK;
 
+                System.out.println("New price:");
+                double price = scanner.nextDouble();
 
-                }
+                Dish newDish = new Dish(newName, newDesc, newCategory, price);
 
-
-                System.out.println("Type the resturant's rate");
-                double resturants_rate =input2.nextDouble();
-
-                System.out.println("Type the resturant's phone");
-                String resturants_phone =input2.nextLine();
-
-                ResturantRepo.getResturantlist().get(index).setName(resturants_name);
-
-                ResturantRepo.getResturantlist().get(index).setPhone(resturants_phone);
-
-                ResturantRepo.getResturantlist().get(index).setAddress(resturants_address);
-
-                ResturantRepo.getResturantlist().get(index).setRating(resturants_rate);
-
-
+                resturant.updateDish(oldDish, newDish);
             }
 
+        } while (choice != 0);
+    }
 
-
-        }
-        else {
-            System.out.println("This resturante does not exist");
-        }
-
-    };//menu **********/
-
-
-
-    public void editCustomerDetail(String name){
-
-        int index=CustomerRepo.getCustomerList().indexOf(name);
-
-        if(index!=-1){
-            System.out.println("Do you want to remove the client account");
-            Scanner choise=new Scanner(System.in);
-            char c=choise.next().toLowerCase().charAt(0);
-            if (c=='y'){
-                CustomerRepo.getCustomerList().remove(index);
+    public void editCustomerDetail(String name) {
+        Customer customer = new Customer();
+        for (Customer customer1 : CustomerRepo.getCustomerList()){
+            if (customer1.getName().equals(name)) {
+                customer = customer1;
             }
-            else {
-                System.out.println("client name: " + CustomerRepo.getCustomerList().get(index).getName() +
-                        "client email" + CustomerRepo.getCustomerList().get(index).getEmail() +
-                        "client address" + CustomerRepo.getCustomerList().get(index).getAddress() +
-                        "client number" + CustomerRepo.getCustomerList().get(index).getNumber());
-                System.out.println("Type the client's name");//Show data!!!!!!!!!!!!!
-                Scanner input2=new Scanner(System.in);
-                String client_name =input2.nextLine();
+        }
+        System.out.println("New name");
+        customer.setName(scanner.nextLine());
 
-                System.out.println("Type the client's email");
-                String clients_email =input2.nextLine();
+        System.out.println("New email");
+        customer.setEmail(scanner.nextLine());
 
-                System.out.println("Type the client's number");
-                String clients_number =input2.nextLine();
+        System.out.println("New phone");
+        customer.setNumber(scanner.nextLine());
 
-                System.out.println("Type the client's address");
-                String clients_address =input2.nextLine();
+        System.out.println("New address");
+        customer.setAddress(scanner.nextLine());
+    }
 
-                CustomerRepo.getCustomerList().get(index).setName(client_name);
-
-                CustomerRepo.getCustomerList().get(index).setEmail(clients_email);
-
-                CustomerRepo.getCustomerList().get(index).setNumber(clients_number);
-
-                CustomerRepo.getCustomerList().get(index).setAddress(clients_address);
-
+    public void removeCustomer(String name) {
+        Customer customer = new Customer();
+        for (Customer customer1 : CustomerRepo.getCustomerList()){
+            if (customer1.getName().equals(name)) {
+                customer = customer1;
             }
-
-            System.out.println("Do you want to cancle order");
-            Scanner input=new Scanner(System.in);
-            String chois= input.nextLine();
-            if (chois=="cancle"){
-                CustomerRepo.getCustomerList().get(index).cancelOrder();
-            }
-
-
-        }
-        else{
-            System.out.println("This customer does not exist");
         }
 
-
-    };
-
-
-    public void removeCustomer (String name){
-
-        int index=CustomerRepo.getCustomerList().indexOf(name);
-        if(index!=-1) {
-            CustomerRepo.getCustomerList().remove(index);
-        }
-        else{
-            System.out.println("This customer does not exist");
-        }
-    };
-
+        if (!CustomerRepo.getCustomerList().remove(customer))
+            throw new IllegalArgumentException("Customer not found");
+    }
 }
