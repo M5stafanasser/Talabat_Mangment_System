@@ -1,63 +1,79 @@
 package Talabat;
 
-
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Scanner;
-
 
 public class Order {
-    NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
-    private int number ;
-    private Resturant resturant ;
-    private LocalDateTime deliveryTime ;
-    private enum orderStatus{
-        Preparing , Delivering , Finished
-    }
-    private orderStatus status;
-    private double totalPrice ;
-    private ArrayList<OderItem> menu;
-    private Payment payment ;
-    private static int counter = 0 ;
 
-    public Order() {
-        this(0,null,null,orderStatus.Preparing,new ArrayList<OderItem>()) ;
+    private int number;
+    private Resturant resturant;
+    private double totalPrice;
+    private LocalDateTime deliveryTime;
+    private OrderStatus status;
+    private ArrayList<OrderItem> menu;
+    private Payment payment;
+    private static int counter;
+    private NumberFormat formatter;
+    private Presentable presenter;
+
+    public Order(Presentable presenter) {
+        this(0,
+                null,
+                null,
+                OrderStatus.Preparing,
+                new ArrayList<OrderItem>(),
+                presenter) ;
+
         this.totalPrice = 0.0;
     }
 
     private Order(int number, Resturant resturant, LocalDateTime deliveryTime,
-                  orderStatus status, ArrayList<OderItem> dishList) {
+                  OrderStatus status, ArrayList<OrderItem> dishList, Presentable presenter) {
         setResturant(resturant);
         setDeliveryTime(deliveryTime);
         setStatus(status);
         setNumber(number);
         setMenu(dishList);
-    }
-    public Order( Resturant resturant, LocalDateTime deliveryTime,
-                  orderStatus status, ArrayList<OderItem> dishList) {
-        this(counter++,resturant,LocalDateTime.now().plusMinutes(20),status,dishList) ;
+
+        formatter = NumberFormat.getCurrencyInstance(Locale.US);
     }
 
+    public Order(Resturant resturant,
+                 ArrayList<OrderItem> dishList,
+                 Presentable presenter) {
+
+        this(counter++,
+                resturant,
+                LocalDateTime.now().plusMinutes(20),
+                OrderStatus.Preparing,
+                dishList,
+                presenter ) ;
+    }
 
     public Order(Order otherOrder){
-        this(otherOrder.number,otherOrder.resturant,otherOrder.deliveryTime,otherOrder.status,otherOrder.menu) ;
+        this(otherOrder.getNumber(),
+                otherOrder.getResturant(),
+                otherOrder.getDeliveryTime(),
+                otherOrder.getStatus(),
+                otherOrder.getMenu(),
+                otherOrder.getPresenter());
     }
 
-    public void setMenu(ArrayList<OderItem> menu) {
-        this.menu = menu;
+
+    public void setMenu(ArrayList<OrderItem> menu) {
+        this.menu = new ArrayList<OrderItem>(menu);
         calcTotal();
     }
 
-    public void setDeliveryTime(LocalDateTime deliveryTime) throws IllegalArgumentException {
-        this.deliveryTime = deliveryTime ;
+    public void setDeliveryTime(LocalDateTime deliveryTime){
+        this.deliveryTime = deliveryTime;
     }
 
     public void setResturant(Resturant resturant) {
         this.resturant = resturant;
     }
-
 
     public void setNumber(int number) {
         this.number = number;
@@ -67,9 +83,10 @@ public class Order {
         this.payment = payment;
     }
 
-    public void setStatus(orderStatus status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
+
 
     public int getNumber() {
         return number;
@@ -79,7 +96,7 @@ public class Order {
         return resturant;
     }
 
-    public orderStatus getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
@@ -87,65 +104,77 @@ public class Order {
         return totalPrice;
     }
 
-    public String getDeliveryTime() {
-        return deliveryTime.toString();
+    public LocalDateTime getDeliveryTime() {
+        return deliveryTime;
+    }
+
+    public ArrayList<OrderItem> getMenu() {
+        return menu;
+    }
+
+    public Presentable getPresenter() {
+        return presenter;
     }
 
 
     public void calcTotal(){
-        for(OderItem item : menu){
-//            this.totalPrice += item.getTotalPrice();
+        this.totalPrice = 0;
+        for(OrderItem item : menu){
+            this.totalPrice += item.getTotalPrice();
         }
     }
-
 
     private boolean finishOrder(String address){
 
-        System.out.println("address:" + address);
-        for(OderItem item : menu){
-            System.out.println(item);
+        presenter.print("address:" + address + "\n\n");
+
+        for(OrderItem item : menu){
+            presenter.print("\t-");
+            presenter.print(item);
         }
-        System.out.println("Sub_total:" + formatter.format(totalPrice));
-        System.out.println("Delivery_price:" + formatter.format(20));
-        System.out.println("Total:" + formatter.format(totalPrice+20));
+
+        presenter.print("\n\n\tSub_total:" + formatter.format(totalPrice));
+        presenter.print("\tDelivery_price:" + formatter.format(20));
+        presenter.print("Total:" + formatter.format(totalPrice+20));
 
         while(true){
-            Scanner scanner = new Scanner(System.in);
-            String input = scanner.next() ;
-            if(input.toLowerCase().equals("x")){
-                return false ;
-            }
-            else if(input.toLowerCase().equals("b")){
-                payment = new Payment() ;
-//                  payment.processPayment();
-                return true ;
-            }
-            else {
-                System.out.println("Invaild input Try Again!");
-            }
+            presenter.print("Enter P to proceed to payment");
+            presenter.print("Enter X to cancel order");
 
+            String input = presenter.read();
+            if(input.toLowerCase().equals("x"))
+                return false ;
+            else if(input.toLowerCase().equals("p")){
+                payment = new Payment() ;
+                payment.processPayment();
+                return true;
+            }
+            else
+                presenter.print("Invaild input Try Again!");
         }
     }
 
-
-
-
     public void showOrder(){
+        presenter.print("Order Number: " + number);
 
-        System.out.println("Order Number: " +getNumber());
+        presenter.print("Restaurant: " + resturant);
 
-        System.out.println("Restaurant: " + getResturant());
+        presenter.print("Status:"+ status);
 
-        System.out.println("Status:"+ getStatus());
+        presenter.print("Delivery Time:"+ deliveryTime);
 
-        System.out.println("Delivery Time:"+ getDeliveryTime());
-
-        System.out.println("Items:");
-        for(OderItem item : menu){
-            System.out.println(item);
+        presenter.print("\n\nItems:");
+        for(OrderItem item : menu){
+            presenter.print("\t -");
+            presenter.print(item);
         }
 
-        System.out.println("Total_Price:" + formatter.format(getTotalPrice()));
+        presenter.print("Total_Price:" + formatter.format(totalPrice));
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        Order other = (Order) obj;
+        return (this.number == other.getNumber());
     }
 }

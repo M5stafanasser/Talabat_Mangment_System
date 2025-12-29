@@ -181,6 +181,10 @@ public class Admin extends User {
 
             if (choice == 4) {
                 System.out.println("Old dish name:");
+                    ArrayList<Dish> d = new ArrayList<>();
+                    //Dish enteredDish = new Dish(dish_name,dish_category,dish_price,dish_discription);
+                    //d.add(enteredDish);
+                   // ResturantRepo.getResturantlist().set(get(index),d);
 
                 String oldName = scanner.nextLine();
 
@@ -213,6 +217,29 @@ public class Admin extends User {
 
                 resturant.updateDish(oldDish, newDish);
             }
+            else {
+                System.out.println("client name: " + CustomerRepo.getCustomerList().get(index).getName() +
+                        "client email" + CustomerRepo.getCustomerList().get(index).getEmail() +
+                        "client address" + CustomerRepo.getCustomerList().get(index).getAddress() +
+                        "client number" + CustomerRepo.getCustomerList().get(index).getPhoneNo());
+                System.out.println("Type the client's name");//Show data!!!!!!!!!!!!!
+                Scanner input2=new Scanner(System.in);
+                String client_name =input2.nextLine();
+
+                System.out.println("Type the client's email");
+                String clients_email =input2.nextLine();
+
+                System.out.println("Type the client's number");
+                String clients_number =input2.nextLine();
+
+                System.out.println("Type the client's address");
+                String clients_address =input2.nextLine();
+
+                CustomerRepo.getCustomerList().get(index).setName(client_name);
+
+                CustomerRepo.getCustomerList().get(index).setEmail(clients_email);
+
+                CustomerRepo.getCustomerList().get(index).setPhoneNo(clients_number);
 
         } while (choice != 0);
     }
@@ -223,6 +250,16 @@ public class Admin extends User {
             if (customer1.getName().equals(name)) {
                 customer = customer1;
             }
+
+            System.out.println("Do you want to cancle order");
+            Scanner input=new Scanner(System.in);
+            String chois= input.nextLine();
+            if (chois=="cancle"){
+                // here there is an error because the fn cancelOrder takes int (orderNumber you want to cancel) as parameter
+                //CustomerRepo.getCustomerList().get(index).cancelOrder();
+            }
+
+
         }
         System.out.println("New name");
         customer.setName(scanner.nextLine());
