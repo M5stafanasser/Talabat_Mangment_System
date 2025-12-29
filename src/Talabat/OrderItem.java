@@ -8,33 +8,46 @@ public class OrderItem {
     private Dish orderedDish;
 
 
-    public OrderItem(int quantity, Dish orderedDish) {
-        this.quantity = quantity;
-        this.orderedDish = orderedDish;
+    public OrderItem(int quantity, Dish orderedDish)throws IllegalArgumentException{
+        try {
+            setQuantity(quantity);
+            setOrderedDish(orderedDish);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
+
     public OrderItem(){
-        this(0, null);
+        this(0, new Dish());
     }
 
-    public OrderItem(OrderItem otherOrderItem) {
-//            this(otherOrderItem.quantity, new Dish(otherOrderItem.getOrderedDish())));
-
+    public OrderItem(OrderItem otherOrderItem){
+        this(otherOrderItem.getQuantity(), otherOrderItem.getOrderedDish());
     }
+
 
     private void calculateTotalPrice() {
-//      this.TotalPrice = quantity * orderedDish.getPrice();
+      this.TotalPrice = this.quantity * this.orderedDish.getPrice();
     }
 
-    public void setOrderedDish(Dish orderedDish) {
+    public void setOrderedDish(Dish orderedDish) throws IllegalArgumentException{
         if (orderedDish == null)
             throw new IllegalArgumentException("Dish can't be null");
 
-        this.orderedDish = orderedDish;
+        this.orderedDish = new Dish(orderedDish);
     }
 
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setQuantity(int quantity) throws IllegalArgumentException{
+        if(quantity < 0){
+            throw new IllegalArgumentException("quantity can't be negative");
+        }
+        this.quantity = quantity;
+    }
 
-    public double getTotalPrice()  { return TotalPrice; }
+    public double getTotalPrice()  {
+        calculateTotalPrice();
+        return TotalPrice;
+    }
 
     public Dish getOrderedDish() { return orderedDish; }
 
@@ -42,7 +55,7 @@ public class OrderItem {
 
     @Override
     public String toString() {
-        return //orderedDish.getName() +
+        return orderedDish.getName() +
                 "\t"  + getQuantity()
                 + "\t" + getTotalPrice();
     }
