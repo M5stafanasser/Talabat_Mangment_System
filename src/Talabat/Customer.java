@@ -247,6 +247,8 @@ public class Customer extends User {
                  }
                  if(!found)
                      throw new NumberFormatException();
+                 else
+                     break;
 
              } catch (NumberFormatException e){
                  presenter.print("Invalid number Enter Invalid number");
@@ -281,6 +283,8 @@ public class Customer extends User {
                  }
                  if (!found)
                      throw new NumberFormatException();
+                 else
+                     break;
              }
              catch(NumberFormatException e) {
                  presenter.print("Plz Enter a Valid Order Number");
