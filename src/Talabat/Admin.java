@@ -222,7 +222,7 @@ public class Admin extends User {
                 System.out.println("client name: " + CustomerRepo.getCustomerList().get(index).getName() +
                         "client email" + CustomerRepo.getCustomerList().get(index).getEmail() +
                         "client address" + CustomerRepo.getCustomerList().get(index).getAddress() +
-                        "client number" + CustomerRepo.getCustomerList().get(index).getNumber());
+                        "client number" + CustomerRepo.getCustomerList().get(index).getPhoneNo());
                 System.out.println("Type the client's name");//Show data!!!!!!!!!!!!!
                 Scanner input2=new Scanner(System.in);
                 String client_name =input2.nextLine();
@@ -240,7 +240,7 @@ public class Admin extends User {
 
                 CustomerRepo.getCustomerList().get(index).setEmail(clients_email);
 
-                CustomerRepo.getCustomerList().get(index).setNumber(clients_number);
+                CustomerRepo.getCustomerList().get(index).setPhoneNo(clients_number);
 
                 CustomerRepo.getCustomerList().get(index).setAddress(clients_address);
 
