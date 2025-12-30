@@ -140,17 +140,17 @@ public class Customer extends User {
      takes the order from the customer and returned it for the next processes
     */
      private Order placeOrder(Resturant res )  {
-         Order ord = new Order(presenter); //this will have the orer of the customer will order
+         Order customerOrder = new Order(presenter); //this will have the orer of the customer will order
 
          //this dishLimit it has the total number we have of Dishes as String to use in a condition
-         String dishLimit = Integer.toString(res.getMenu().size());
+        // String dishLimit = Integer.toString(res.getMenu().size());
          String answer; //this var for if the customer want to add another dish
 
          // this arraylist to add init the orderitem for customer and to make the order arraylist of menu have it
-         ArrayList<OrderItem> ordItem = new ArrayList<>();
+         ArrayList<OrderItem> customerAllDishes = new ArrayList<>();
 
          OrderItem orderCustomerPicked = new OrderItem();
-            ord.setResturant(res);
+            customerOrder.setResturant(res);
 
             presenter.print("Menu"+"\n\t");
             presenter.print(res.showMenu());
@@ -178,34 +178,41 @@ public class Customer extends User {
             }
 
             presenter.print("Enter the amount: ");
-            int amountOfDish = Integer.valueOf(presenter.read());//this var for the customer enter how many dish he wants
+
 
             //this while loop for thr validation of the amount of the dishes
             while (true) {
-                if (amountOfDish > 0) {
-                    orderCustomerPicked.setQuantity(amountOfDish);
-                    break;
-                } else {
-                    presenter.print("Plz Enter a Valid Amount");
+                try {
+                    //this var for the customer enter how many dish he wants
+                    int amountOfDish = Integer.valueOf(presenter.read());
+                    if (amountOfDish > 0) {
+                        orderCustomerPicked.setQuantity(amountOfDish);
+                        break;
+                    } else {
+                       throw new IllegalArgumentException();
+                    }
+                }catch(IllegalArgumentException e){
+                    presenter.print("Invalid Amount plz Enter a valid Amount");
+
                 }
             }
-            ordItem.add(orderCustomerPicked);
+            customerAllDishes.add(orderCustomerPicked);
 
             presenter.print("Do you want another Dish ? (Y/N)");
             answer = presenter.read();
 
             if (answer.toLowerCase().equals("n")) {
-                ord.setMenu(ordItem);
+                customerOrder.setMenu(customerAllDishes);
                 //here remeber that you will the constructur all the data you want
-                ord = new Order(presenter);
+                customerOrder = new Order(presenter);
                 break;
             } else if (!answer.toLowerCase().equals("y")) {
                 presenter.print("Invalid Choice plz enter the valid choice");
             }
         }
-        this.orders.add(ord);
-        ord.showOrder();
-        return ord;
+        this.orders.add(customerOrder);
+        customerOrder.showOrder();
+        return customerOrder;
      }
 
     /*
@@ -218,50 +225,76 @@ public class Customer extends User {
                 return;
      }
 
-     public void cancelOrder(int orderNumber){
 
-         for(int i=0;i<this.orders.size();i++){
-             presenter.print((this.orders.get(i).getNumber()));
-             presenter.print(this.orders.get(i).getResturant().getName());
+     public void cancelOrder(){
+        int orderNumber;
+         for(Order order : this.orders){
+             presenter.print((order.getNumber()));
+             presenter.print(order.getResturant().getName());
              presenter.print("---------------------- \t ----------------------------");
          }
-        for(int i=0 ;i<this.orders.size();i++){
-           if(this.orders.get(i).getNumber()==orderNumber)
-            {
-            this.orders.remove(i);
+         while(true) {
+             boolean found = false;
+             try {
+                 orderNumber = Integer.valueOf(presenter.read());
+                 for (Order order : this.orders) {
+                     if (order.getNumber() == orderNumber) {
+                         this.orders.remove(order);
+                         found = true;
+                         break;
 
-            }
-        }
+                     }
+                 }
+                 if(!found)
+                     throw new NumberFormatException();
+                 else
+                     break;
+
+             } catch (NumberFormatException e){
+                 presenter.print("Invalid number Enter Invalid number");
+             }
+         }
+
      }
 
      public void trackOrder(){
         Integer orderPicked;
-         for(int i=0;i<this.orders.size();i++){
-             presenter.print((this.orders.get(i).getNumber()));
-             presenter.print(this.orders.get(i).getResturant().getName());
+         for(Order order : this.orders){
+             presenter.print((order.getNumber()));
+             presenter.print(order.getResturant().getName());
              presenter.print("---------------------- \t ----------------------------");
          }
          presenter.print("Enter the number of the Order you want to track");
 
          //this loop to see if the number he enterd for the orderNumber valid or not found
          while(true) {
-             orderPicked = Integer.valueOf(presenter.read());
-             boolean found =false;
-             for (int i = 0; i < this.orders.size(); i++) {
+             try {
+                 orderPicked = Integer.valueOf(presenter.read());
+                 boolean found = false;
 
-                 if (this.orders.get(i).getNumber() == orderPicked) {
-                     this.orders.get(i).showOrder();
-                     found = true;
+                 for (Order order : this.orders) {
+
+                     if (order.getNumber() == orderPicked) {
+                         order.showOrder();
+                         found = true;
+                         break;
+                     }
+
                  }
-
+                 if (!found)
+                     throw new NumberFormatException();
+                 else
+                     break;
              }
-             if(found)
-                 break;
-             else {
+             catch(NumberFormatException e) {
                  presenter.print("Plz Enter a Valid Order Number");
              }
          }
 
      }
 
+    @Override
+    public String toString() {
+        return this.getName() + " "+this.getAddress()+ " "+this.getEmail()+" "+getPhoneNo();
+    }
 }
