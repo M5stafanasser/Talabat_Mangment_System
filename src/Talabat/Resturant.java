@@ -71,12 +71,12 @@ public class Resturant {
             throw new IllegalArgumentException("Invalid name");
 
     ArrayList<Resturant> resturants = ResturantRepo.getResturantlist();
-    for(Resturant resturant : resturants) {
-        if(name.equals(resturant.getName())) {
-            throw  new IllegalArgumentException("Invalid name");
+        for(Resturant resturant : resturants) {
+            if(name.equals(resturant.getName())) {
+                throw  new IllegalArgumentException("Invalid name");
+            }
         }
-    }
-                this.name = name;
+        this.name = name;
     }
 
     public String getPhone() {
@@ -94,7 +94,7 @@ public class Resturant {
     }
 
     public void setRating(double rating) {
-        if (rating < 0 || rating > 5)
+        if (rating < 0 || rating > 10)
             throw new IllegalArgumentException("Invalid rating");
         this.rating = rating;
     }
@@ -122,19 +122,19 @@ public class Resturant {
     public void addDish(Dish dish) {
         if (dish == null)
             throw new IllegalArgumentException("Dish cannot be null");
-        //new menu
-            getMenu().add(dish);
+            menu.add(dish);
             dishCounter++;
     }
+
     public void removeDish(Dish dish) {
-        if(dish==null) {
-            throw new IllegalArgumentException("Dish not found");
-        }
         getMenu().remove(dish);
         dishCounter--;
     }
+
     public void addRating(double rating) {
-        setRating(rating);
+        setRating(rating/10 + this.rating);
+        if(this.rating > 10)
+            setRating(10);
     }
 
     public void updateDish(Dish oldDish, Dish newDish) {
