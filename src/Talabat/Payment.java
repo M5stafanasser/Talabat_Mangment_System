@@ -1,6 +1,5 @@
 package Talabat;
 
-import java.time.LocalDate;
 import java.util.Scanner;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -13,30 +12,20 @@ public class Payment {
 
     private String cardNumber;
     private YearMonth expiredDate;
-    private int cvv;
+    private String cvv;
 
-    Scanner scan = new Scanner(System.in);
+    private Presentable presenter;
 
     private Payment(String payMethod, double amount, int transactionID) {
         this.payMethod = payMethod;
-        try {
-            setAmount(amount);
-        } catch(Exception e){
-            while(true){
-                System.out.println(e.getMessage());
-                System.out.println("Enter the Amount again :)  ");
-                double enteringAmount  = scan.nextDouble();
-                if(enteringAmount > 0){
-                    setAmount(enteringAmount);
-                    break;
-                }
-            }
-        }
+        this.amount = amount;
         this.transactionID = transactionID;
     }
+
     public Payment(String payMethod, double amount) {
             this(payMethod, amount, (int) Math.random() * 100000 + 1000 );
     }
+
     public Payment(){
         this("c", 0);
     }
@@ -53,9 +42,9 @@ public class Payment {
                 setExpiredDate(YearMonth.parse(inputDate, formatter));
                 break;
             }
-            System.out.println("Invalid Expired Date :( ");
-            System.out.println("Enter the correct Expired again (MM/yyyy): ");
-            inputDate = scan.next();
+            presenter.print("Invalid Expired Date :( ");
+            presenter.print("Enter the correct Expired again (MM/yyyy): ");
+            inputDate = presenter.read();
         }
 
 
@@ -63,7 +52,7 @@ public class Payment {
 
 
     // card payment function
-    private boolean pay(String cardNumber, YearMonth expiredDate,  int cvv){
+    private boolean pay(String cardNumber, YearMonth expiredDate,  String cvv){
         return true;
     }
 
@@ -75,12 +64,12 @@ public class Payment {
     public void processPayment()  {
         String paymentWay;
         while(true){
-            System.out.println("Enter way of Payment (v for Visa : c for Cash): ");
-            paymentWay = scan.next();
+            presenter.print("Enter way of Payment (v for Visa : c for Cash): ");
+            paymentWay = presenter.read();
             paymentWay = paymentWay.toLowerCase();
             if(paymentWay.equals("c")   || paymentWay.equals("v") )    { break; }
             else{
-                System.out.println("Payment Method should be visa or cash -- \nEnter paymethod again should match (c / v): ");
+                presenter.print("Payment Method should be visa or cash -- \nEnter paymethod again should match (c / v): ");
             }
         }
         setPayMethod(paymentWay);
@@ -89,15 +78,15 @@ public class Payment {
             pay();
         }
         else if (payMethod.equals("v")) {
-            System.out.println("Enter Card number: ");
-            cardNumber = scan.next();
+            presenter.print("Enter Card number: ");
+            cardNumber = presenter.read();
 
-            System.out.println("Enter expired date (MM/yyyy)  : ");
-            String inputDate = scan.next();
+            presenter.print("Enter expired date (MM/yyyy)  : ");
+            String inputDate = presenter.read();
             formatingExpiredDate(inputDate);
-            
-            System.out.println("Enter your CVV (3 numbers in the back of the Card): ..." );
-            cvv = scan.nextInt();
+
+            presenter.print("Enter your CVV (3 numbers in the back of the Card): ..." );
+            cvv = presenter.read();
             setCvv(cvv);
 
             pay(cardNumber, expiredDate, cvv);
@@ -115,7 +104,7 @@ public class Payment {
 
     public void setExpiredDate(YearMonth expiredDate) { this.expiredDate = expiredDate; }
 
-    public void setCvv(int cvv) { this.cvv = cvv; }
+    public void setCvv(String cvv) { this.cvv = cvv; }
 
     public void setCardNumber(String cardNumber) { this.cardNumber = cardNumber; }
 
@@ -129,6 +118,6 @@ public class Payment {
 
     public String getCardNumber() { return cardNumber; }
 
-    public int getCvv() { return cvv; }
+    public String getCvv() { return cvv; }
 
 }
