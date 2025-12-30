@@ -234,12 +234,12 @@ public class Admin extends User {
     public void editCustomerDetail() {
         Customer customer;
         while(true){
-            presenter.print("please enter the phone of the customer to delete(x to cancle): ");
-            String phone = presenter.read();
-            if(phone.equals("x"))
+            presenter.print("please enter the username of the customer to delete(x to cancle): ");
+            String username = presenter.read();
+            if(username.equals("x"))
                 return;
 
-            int index = CustomerRepo.getCustomerList().indexOf(new Customer(phone, presenter));
+            int index = CustomerRepo.getCustomerList().indexOf(new Customer(username, presenter));
             if(index == -1)
                 continue;
             customer = CustomerRepo.getCustomerList().get(index);
@@ -266,9 +266,9 @@ public class Admin extends User {
 
     public void removeCustomer() {
         while(true){
-            presenter.print("please enter the phone of the customer to delete:");
-            String phone = presenter.read();
-            int index = CustomerRepo.getCustomerList().indexOf(new Customer(phone, presenter));
+            presenter.print("please enter the username of the customer to delete:");
+            String username = presenter.read();
+            int index = CustomerRepo.getCustomerList().indexOf(new Customer(username, presenter));
             if(index == -1)
                 continue;
             CustomerRepo.getCustomerList().remove(index);

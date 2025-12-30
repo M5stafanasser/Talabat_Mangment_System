@@ -49,9 +49,9 @@ public class Customer extends User {
         this.orders = new ArrayList<>(other.orders);
     }
 
-    public Customer(String phoneNo, Presentable presenter) {
+    public Customer(String username, Presentable presenter) {
         this(presenter);
-        this.phoneNo = phoneNo;
+        this.setUserName(username);
     }
 
     // the following 8 Methods are the setters and the getters for the fields
@@ -304,6 +304,74 @@ public class Customer extends User {
     @Override
     public boolean equals(Object obj) {
         Customer other = (Customer) obj;
-        return this.phoneNo.equals(other.getPhoneNo());
+        return this.getUserName().equals(other.getUserName());
     }
+
+    public static Customer addCustomer (Presentable presenter){
+         Customer customer = new Customer(presenter);
+         presenter.print("Enter name : ");
+         customer.setName(presenter.read());
+         presenter.print("Enter phone : ");
+         customer.setPhoneNo(presenter.read());
+         presenter.print("Enter Email : ");
+         customer.setEmail(presenter.read());
+         presenter.print("Enter user name : ");
+         customer.setUserName(presenter.read());
+         presenter.print("Enter password : ");
+         customer.setPassWord(presenter.read());
+         presenter.print("Enter address : ");
+         customer.setAddress(presenter.read());
+
+         presenter.print("customer added\t welcome to TALABT");
+         CustomerRepo.addCustomer(customer);
+         return customer;
+    }
+
+    public static User findCustomer(Presentable presenter){
+        while (true){
+            presenter.print("Enter User name :");
+            String username = presenter.read();
+
+            User user = CustomerRepo.findCustomer(new Customer(username, presenter));
+
+            if (username.equals("ADMIN")) {
+                while (true) {
+                    presenter.print("Enter password (Enter x to cancel:");
+                    String password = presenter.read();
+                    if (password.equals("x")) {
+                        user = null;
+                    } else if (!password.equals("admin123")){
+                        presenter.print("wrong password, try again");
+                        continue;
+                    }else {
+                        presenter.print("welcome back ADMIN");
+                        user = new Admin(presenter);
+                    }
+                    break;
+                }
+            }
+            else if (user == null) {
+                presenter.print("no such user name, try again");
+                continue;
+            }
+            else {
+                while (true) {
+                    presenter.print("Enter password (Enter x to cancel:");
+                    String password = presenter.read();
+                    if (password.equals("x"))
+                        user = null;
+                    else if (!password.equals(user.getPassWord())) {
+                        presenter.print("wrong password, try again");
+                        continue;
+                    }
+                    else
+                        presenter.print("welcome back ADMIN");
+                    break;
+                }
+            }
+
+            return user;
+        }
+    }
+
 }
