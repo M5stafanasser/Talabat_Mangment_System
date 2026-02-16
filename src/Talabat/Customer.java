@@ -1,8 +1,6 @@
 package Talabat;
 import java.util.ArrayList;
 
-import static java.lang.Character.toLowerCase;
-
 public class Customer extends User {
     private String name;
     private String address;
@@ -91,58 +89,11 @@ public class Customer extends User {
         return orders;
     }
 
-// From here the Methods that do actions For the Customers
-    /*  the showResLis() Method it takes the customer choice for the Restaurant and returns
-        that Restaurant to work on it on the next processes
-     */
-
-     private Resturant showResLis() {
-         Resturant restaurantPicked; //this var will have the Restaurant that the Customer Choose
-
-         //this restaurantLimit it has the total number we have of Restaurant as String to use in a condition
-         String restaurantLimit = Integer.toString(ResturantRepo.getResturantlist().size());
-
-         //show all Restaurants for the Customer
-         presenter.print("Restaurants");
-
-         int i = 1;
-         for(Resturant res : ResturantRepo.getResturantlist())
-             presenter.print("\t" + (i++) + "- " + res.getName());
-
-         presenter.print("\n\nChoose the number of the Restaurant you want (enter X to cancle) : ");
-
-         //this loop to validate the Choice of the Customer of the Restaurants
-         while(true) {
-             String choice = presenter.read();
-             if (choice.toLowerCase().equals("x")) {
-                 return null;
-             }
-             // this condition check if the Entered String is Number because if it was a String fn valueOf wiil Throw Exception
-             else {
-                 try {
-                     int resNo = Integer.valueOf(choice);
-
-                     if (resNo > 0 && resNo <= ResturantRepo.getResturantlist().size()) {
-                         restaurantPicked = ResturantRepo.getResturantlist().get(resNo -1);
-                         break;
-                     } else {
-                         throw new IllegalArgumentException();
-                     }
-                 } catch (IllegalArgumentException e) {
-                     presenter.print("Invalid Choice plz Enter a valid Choice");
-                 }
-             }
-         }
-         placeOrder(restaurantPicked);
-
-         return restaurantPicked;
-     }
-
     /*
      the placeOrder() Method it takes the Restaurant that returned by the showResLis() and then
      takes the order from the customer and returned it for the next processes
     */
-     private Order placeOrder(Resturant res )  {
+     private Order placeOrder(Resturant res ) {
          Order customerOrder = new Order(presenter); //this will have the orer of the customer will order
 
          //this dishLimit it has the total number we have of Dishes as String to use in a condition
@@ -223,11 +174,15 @@ public class Customer extends User {
     available and the menu of the Restaurant that he chose
     */
      public void newOrder(){
-        while(true)
-            if (this.showResLis() == null)
-                return;
-     }
+        while(true) {
+            Resturant res = SystemActions.showResLis();
 
+            if (res == null)
+                return;
+
+            placeOrder(res);
+        }
+     }
 
      public void cancelOrder(){
         int orderNumber;
@@ -245,7 +200,6 @@ public class Customer extends User {
                          this.orders.remove(order);
                          found = true;
                          break;
-
                      }
                  }
                  if(!found)
@@ -276,13 +230,11 @@ public class Customer extends User {
                  boolean found = false;
 
                  for (Order order : this.orders) {
-
                      if (order.getNumber() == orderPicked) {
                          order.showOrder();
                          found = true;
                          break;
                      }
-
                  }
                  if (!found)
                      throw new NumberFormatException();
@@ -305,73 +257,6 @@ public class Customer extends User {
     public boolean equals(Object obj) {
         Customer other = (Customer) obj;
         return this.getUserName().equals(other.getUserName());
-    }
-
-    public static Customer addCustomer (Presentable presenter){
-         Customer customer = new Customer(presenter);
-         presenter.print("Enter name : ");
-         customer.setName(presenter.read());
-         presenter.print("Enter phone : ");
-         customer.setPhoneNo(presenter.read());
-         presenter.print("Enter Email : ");
-         customer.setEmail(presenter.read());
-         presenter.print("Enter user name : ");
-         customer.setUserName(presenter.read());
-         presenter.print("Enter password : ");
-         customer.setPassWord(presenter.read());
-         presenter.print("Enter address : ");
-         customer.setAddress(presenter.read());
-
-         presenter.print("customer added\t welcome to TALABT");
-         CustomerRepo.addCustomer(customer);
-         return customer;
-    }
-
-    public static User findCustomer(Presentable presenter){
-        while (true){
-            presenter.print("Enter User name :");
-            String username = presenter.read();
-
-            User user = CustomerRepo.findCustomer(new Customer(username, presenter));
-
-            if (username.equals("ADMIN")) {
-                while (true) {
-                    presenter.print("Enter password (Enter x to cancel:");
-                    String password = presenter.read();
-                    if (password.equals("x")) {
-                        user = null;
-                    } else if (!password.equals("admin123")){
-                        presenter.print("wrong password, try again");
-                        continue;
-                    }else {
-                        presenter.print("welcome back ADMIN");
-                        user = new Admin(presenter);
-                    }
-                    break;
-                }
-            }
-            else if (user == null) {
-                presenter.print("no such user name, try again");
-                continue;
-            }
-            else {
-                while (true) {
-                    presenter.print("Enter password (Enter x to cancel:");
-                    String password = presenter.read();
-                    if (password.equals("x"))
-                        user = null;
-                    else if (!password.equals(user.getPassWord())) {
-                        presenter.print("wrong password, try again");
-                        continue;
-                    }
-                    else
-                        presenter.print("welcome back ADMIN");
-                    break;
-                }
-            }
-
-            return user;
-        }
     }
 
 }
