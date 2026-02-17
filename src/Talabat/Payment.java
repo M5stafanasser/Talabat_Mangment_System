@@ -77,7 +77,7 @@ public class Payment {
 
         if (payMethod.equals( "c")){
             pay();
-            presenter.print("A4a5la3 el gambary");
+            presenter.print("Aha4tek el gambary");
         }
         else if (payMethod.equals("v")) {
             presenter.print("Enter Card number: ");
