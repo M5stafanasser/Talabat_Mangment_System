@@ -39,7 +39,7 @@ public class Payment {
     private void formatingExpiredDate(String inputDate)  {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
         while(true){
-            if (inputDate.matches("(0[1-9]|1[0-2])/\\d{4}")) {
+            if (inputDate.matches("^(0[1-9]|1[0-2])/(202[5-9]|20[6-9]\\d|[6-9]\\d{3})$")) {
                 setExpiredDate(YearMonth.parse(inputDate, formatter));
                 break;
             }
