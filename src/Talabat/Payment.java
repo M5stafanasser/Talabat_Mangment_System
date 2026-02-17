@@ -77,6 +77,7 @@ public class Payment {
 
         if (payMethod.equals( "c")){
             pay();
+            presenter.print("A4a5la3 el gambary");
         }
         else if (payMethod.equals("v")) {
             presenter.print("Enter Card number: ");
@@ -91,6 +92,7 @@ public class Payment {
             setCvv(cvv);
 
             pay(cardNumber, expiredDate, cvv);
+            presenter.print("A4a5la3 el gambary");
         }
     }
 
