@@ -166,11 +166,9 @@ public class Order {
         DateTimeFormatter formatterd = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         presenter.print("Delivery Time: "+ deliveryTime.format(formatterd) );
 
-        presenter.print("\n\nItems: ");
-        for(OrderItem item : menu){
-            presenter.print("\t -");
-            presenter.print(item);
-        }
+        presenter.print("\nItems: ");
+        for(OrderItem item : menu)
+            presenter.print("\t - " + item);
 
         presenter.print("Total_Price:" + formatter.format(totalPrice));
         presenter.print("\n");

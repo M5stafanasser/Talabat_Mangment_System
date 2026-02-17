@@ -13,11 +13,11 @@ public class SystemActions {
         CustomerRepo.dummyData();
 
         presenter.print("\n\n\t\t ======= welcome to Talabat =======");
-        presenter.print("1) log in\n" + "2) sign in\n" + "0) Exit");
+        presenter.print("1) Create new account\n" + "2) Sign in\n" + "0) Exit");
         while (true){
             String answer = presenter.read();
             if (answer.equals("1"))
-                 return login();
+                 return createNewAccount();
             else if (answer.equals("2"))
                 return signin();
             else if (answer.equals("0"))
@@ -75,7 +75,7 @@ public class SystemActions {
         }
     }
 
-    public static User login(){
+    public static User createNewAccount(){
         Customer customer = new Customer(presenter);
         presenter.print("Enter name : ");
         customer.setName(presenter.read());
