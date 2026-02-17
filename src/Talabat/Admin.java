@@ -31,8 +31,7 @@ public class Admin extends User {
             else if (choice.equals("3"))
                 addRes();
             else if (choice.equals("4")) {
-                presenter.print("Enter restaurant name");
-                editResDetail(presenter.read());
+                editResDetail();
             } else if (choice.equals("5"))
                 editCustomerDetail();
             else if (choice.equals("6"))
@@ -109,12 +108,24 @@ public class Admin extends User {
         ResturantRepo.getResturantlist().add(new Resturant(name, phone, rating, address, menu));
     }
 
-    public void editResDetail(String name) {
-        Resturant resturant = ResturantRepo.getResturantlist().get(
-                ResturantRepo.getResturantlist().indexOf(new Resturant(name)));
+    public void editResDetail() {
+        Resturant resturant = null;
+        while(true) {
+            presenter.print("Enter restaurant name (Enter x to cancle):");
+            String name = presenter.read();
+            if(name.toLowerCase().equals("x"))
+                return;
+            try {
+                resturant = ResturantRepo.getResturantlist().get(
+                    ResturantRepo.getResturantlist().indexOf(new Resturant(name)));
+            } catch (Exception e) {
+                presenter.print("invalid input");
+                continue;
+            }
+            break;
+        }
 
         String choice;
-
         do {
             presenter.print("\n--- Edit Restaurant ---\n" +
                     "1. Edit Info\n" +
@@ -187,20 +198,26 @@ public class Admin extends User {
                 }
             }
             else if (choice.equals("4")) {
-                presenter.print("Old dish name:");
-                String oldName = presenter.read();
-
-                Dish oldDish = resturant.getMenu().get(
-                        resturant.getMenu().indexOf(new Dish(oldName)));
-
+                Dish oldDish = null;
+               while(true) {
+                   presenter.print("Old dish name(enter x to cancle) :");
+                   String oldName = presenter.read();
+                   if(oldName.toLowerCase().equals("x"))
+                    return;
+                   try {
+                       oldDish = resturant.getMenu().get(
+                               resturant.getMenu().indexOf(new Dish(oldName)));
+                   } catch (Exception e) {
+                       presenter.print("invalid input");
+                       continue;
+                   }
+                   break;
+               }
                 presenter.print("old dish :" + oldDish);
-
                 presenter.print("New dish name:");
                 String newName = presenter.read();
-
                 presenter.print("New description:");
                 String newDesc = presenter.read();
-
 
                 Category newCategory = Category.APPETIZER;
                 presenter.print("Category (A Appetizer /M Main_Course /D Desert /B brevelge)");

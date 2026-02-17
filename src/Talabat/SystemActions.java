@@ -117,8 +117,7 @@ public class SystemActions {
                 else if (choice.equals("3"))
                     admin.addRes();
                 else if (choice.equals("4")) {
-                    presenter.print("Enter restaurant name");
-                    admin.editResDetail(presenter.read());
+                    admin.editResDetail();
                 } else if (choice.equals("5"))
                     admin.editCustomerDetail();
                 else if (choice.equals("6"))
@@ -180,7 +179,7 @@ public class SystemActions {
                     int resNo = Integer.valueOf(choice);
 
                     if (resNo > 0 && resNo <= ResturantRepo.getResturantlist().size()) {
-                        restaurantPicked = ResturantRepo.getResturantlist().get(resNo -1);
+                        restaurantPicked = ResturantRepo.getResturantlist().get(resNo-1);
                         break;
                     } else {
                         throw new IllegalArgumentException();

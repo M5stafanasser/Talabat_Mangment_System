@@ -118,7 +118,7 @@ public class Order {
 
 
     public void calcTotal(){
-        this.totalPrice = 0;
+       // this.totalPrice = 0;
         for(OrderItem item : menu){
             this.totalPrice += item.getTotalPrice();
         }
@@ -155,13 +155,15 @@ public class Order {
     }
 
     public void showOrder(){
+
         presenter.print("Order Number: " + number);
 
-        presenter.print("Restaurant: " + resturant);
+        //here is the issue
+        presenter.print("Restaurant: " + this.getResturant().getName());
 
-        presenter.print("Status:"+ status);
+        presenter.print("Status: "+ status);
 
-        presenter.print("Delivery Time:"+ deliveryTime);
+        presenter.print("Delivery Time: "+ deliveryTime);
 
         presenter.print("\n\nItems:");
         for(OrderItem item : menu){
@@ -170,6 +172,7 @@ public class Order {
         }
 
         presenter.print("Total_Price:" + formatter.format(totalPrice));
+        presenter.print("\n");
     }
 
     @Override

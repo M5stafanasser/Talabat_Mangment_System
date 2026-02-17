@@ -13,12 +13,6 @@ public class Resturant {
     private String address;
     private  ArrayList<Dish> menu;
     private static int dishCounter = 0 ;
-    @Override
-    public boolean equals(Object obj) {
-        Resturant resturant = (Resturant) obj;
-        return this.name.equals(resturant.getName());
-    }
-
     public Resturant(String name) {
         this();
         setName(name);
@@ -36,10 +30,10 @@ public class Resturant {
             throw exception;
         }
     }
+
     public Resturant() {
         this("", "", 0, "", new ArrayList<Dish>());
     }
-
     public Resturant(Resturant other) {
         this(other.name, other.phone, other.rating, other.address, other.menu);
     }
@@ -67,16 +61,15 @@ public class Resturant {
     }
 
     public void setName(String name) {
-
         if (name == null)
             throw new IllegalArgumentException("Invalid name");
 
-    ArrayList<Resturant> resturants = ResturantRepo.getResturantlist();
+        /*ArrayList<Resturant> resturants = ResturantRepo.getResturantlist();
         for(Resturant resturant : resturants) {
             if(name.equals(resturant.getName())) {
                 throw  new IllegalArgumentException("Invalid name");
             }
-        }
+        }*/
         this.name = name;
     }
 
@@ -146,5 +139,11 @@ public class Resturant {
         if (index  < 0 )
             throw new IllegalArgumentException("Dish not found");
         dishes.set(index, newDish);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Resturant resturant = (Resturant) obj;
+        return this.name.equals(resturant.getName());
     }
 }

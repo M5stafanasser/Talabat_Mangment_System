@@ -46,6 +46,8 @@ public class OrderItem {
 
     public double getTotalPrice()  {
         calculateTotalPrice();
+        System.out.println(orderedDish);
+        System.out.println(quantity);
         return TotalPrice;
     }
 

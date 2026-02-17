@@ -12,6 +12,6 @@ public class ConsolePresenter implements Presentable {
     @Override
     public String read() {
         Scanner input= new Scanner(System.in);
-        return input.next() ;
+        return input.nextLine();
     }
 }

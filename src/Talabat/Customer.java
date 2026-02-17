@@ -94,7 +94,7 @@ public class Customer extends User {
      takes the order from the customer and returned it for the next processes
     */
      private Order placeOrder(Resturant res ) {
-         Order customerOrder = new Order(presenter); //this will have the orer of the customer will order
+         Order customerOrder = new Order(presenter); //this will have the order of the customer will order
 
          //this dishLimit it has the total number we have of Dishes as String to use in a condition
         // String dishLimit = Integer.toString(res.getMenu().size());
@@ -104,7 +104,7 @@ public class Customer extends User {
          ArrayList<OrderItem> customerAllDishes = new ArrayList<>();
 
          OrderItem orderCustomerPicked = new OrderItem();
-            customerOrder.setResturant(res);
+
 
             presenter.print("Menu"+"\n\t");
             presenter.print(res.showMenu());
@@ -166,6 +166,7 @@ public class Customer extends User {
             }
         }
         this.orders.add(customerOrder);
+        customerOrder.setResturant(res);
         customerOrder.showOrder();
         return customerOrder;
      }

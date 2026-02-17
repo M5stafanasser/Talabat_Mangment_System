@@ -7,5 +7,6 @@ public class Main {
 
         User currUser = SystemActions.startSystem();
         SystemActions.showMainOptions(currUser);
+        currUser.logout();
     }
 }
