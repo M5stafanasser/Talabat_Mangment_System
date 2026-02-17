@@ -266,7 +266,7 @@ public class Customer extends User {
 
     @Override
     public String toString() {
-        return this.getName() + " "+this.getAddress()+ " "+this.getEmail()+" "+getPhoneNo();
+        return "Name: "+this.getName() + " Address: "+this.getAddress()+ " Email: "+this.getEmail()+" Phone no.: "+getPhoneNo();
     }
 
     @Override

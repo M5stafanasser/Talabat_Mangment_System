@@ -146,4 +146,7 @@ public class Resturant {
         Resturant resturant = (Resturant) obj;
         return this.name.equals(resturant.getName());
     }
+    public String toString(){
+        return "Name: "+ this.getName()+" Ratings: "+this.getRating()+" Phone no.: "+this.getPhone();
+    }
 }

@@ -159,7 +159,7 @@ public class Order {
         presenter.print("Order Number: " + number);
 
         //here is the issue ------->><><><><><><><><><><><><>
-        presenter.print("Restaurant: " + this.getResturant().getName());
+        presenter.print("Restaurant: " + resturant);
 
         presenter.print("Status: "+ status);
         deliveryTime = LocalDateTime.now().plusMinutes(20);
